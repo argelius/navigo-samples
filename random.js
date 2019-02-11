@@ -2,6 +2,14 @@ const router = new Navigo(null, true);
 
 let beer = null;
 
+function encode(str) {
+  str = str.toString();
+
+  return str.replace(/[\u00A0-\u9999<>\&]/gim, function(i) {
+    return '&#'+i.charCodeAt(0)+';';
+  });
+}
+
 function homePage() {
   document.querySelector('#main').innerHTML = `
     <a href="/random" data-navigo>Random beer</a>
@@ -13,27 +21,16 @@ function homePage() {
 function randomBeerPage() {
 
   document.querySelector('#main').innerHTML = `
-    <h1>${beer.name}</h1>
-    <p><strong>${beer.tagline}</strong></p>
-    <img height="100" src="${beer.image_url}" alt="${beer.name}">
-    <p>${beer.description}</p>
+    <h1>${encode(beer.name)}</h1>
+    <p><strong>${encode(beer.tagline)}</strong></p>
+    <img height="100" src="${encode(beer.image_url)}" alt="${encode(beer.name)}">
+    <p>${encode(beer.description)}</p>
     <a href="/" data-navigo>Go back</a>
   `;
 
   router.updatePageLinks();
 }
 
-function beerPage() {
-  document.querySelector('#main').innerHTML = `
-    <h1>${beer.name}</h1>
-    <p><strong>${beer.tagline}</strong></p>
-    <img height="100" src="${beer.image_url}" alt="${beer.name}">
-    <p>${beer.description}</p>
-    <a href="/" data-navigo>Go back</a>
-  `;
-
-  router.updatePageLinks();
-}
 
 router
   .on(

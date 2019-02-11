@@ -3,13 +3,23 @@ const router = new Navigo(null, true);
 let beers = [];
 let beer = null;
 
+function encode(str) {
+  str = str.toString();
+
+  const rv = str.replace(/[\u00A0-\u9999<>\&]/gim, function(i) {
+    return '&#'+i.charCodeAt(0)+';';
+  });
+
+  return rv;
+}
+
 function homePage(params) {
   const page = parseInt(params.page);
   document.querySelector('#main').innerHTML = `
     <ul>
       ${beers.map(x => `
         <li>
-          <a href="/beer/${x.id}" data-navigo>${x.name}</a>
+          <a href="/beer/${encode(x.id)}" data-navigo>${encode(x.name)}</a>
         </li>`
       ).join('')}
     </ul>
@@ -22,11 +32,11 @@ function homePage(params) {
 
 function beerPage() {
   document.querySelector('#main').innerHTML = `
-    <h1>${beer.name}</h1>
-    <p><strong>${beer.tagline}</strong></p>
-    <img height="100" src="${beer.image_url}" alt="${beer.name}">
-    <p>${beer.description}</p>
-    <a href="/" data-navigo>Go back</a>
+    <h1>${encode(beer.name)}</h1>
+    <p><strong>${encode(beer.tagline)}</strong></p>
+    <img height="100" src="${encode(beer.image_url)}" alt="${encode(beer.name)}">
+    <p>${encode(beer.description)}</p>
+    <a href="#" onclick="history.back()" data-navigo>Go back</a>
   `;
 
   router.updatePageLinks();
